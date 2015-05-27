@@ -121,7 +121,7 @@ with open("onderwijsinstellingen_amsterdam.csv","w") as fout:
 					Exclusions = ["hotmail.com","gmail.com","outlook.com","xs4all.nl","planet.nl","zonnet.nl"]
 					eMailExtension = re.search(r'(@)(.*)',row[33]).group(2)
 					if eMailExtension not in Exclusions:
-						row[34]= "www.",eMailExtension
+						row[34]= "www.%s" % eMailExtension
 					else:
 						row[34]=''
 
