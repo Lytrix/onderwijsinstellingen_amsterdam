@@ -89,6 +89,7 @@ with open("onderwijsinstellingen_amsterdam.csv","w") as fout:
 	headerTotal = header.fieldnames
 	headerTotal.append("type_code")
 	headerTotal.append("type_naam")
+	headerTotal.append("BRIN_NUMMER")
 	#print headerTotal
 	writer.writerow(headerTotal)
 	
@@ -97,7 +98,7 @@ with open("onderwijsinstellingen_amsterdam.csv","w") as fout:
 	dataSet = csv.reader(listOrg, delimiter=",")
 	for row in dataSet: 
 		if row[1] == 'U' and row[23] == "363":
-			organisationsList.append((row[0],row[5],row[6],row[32],row[33],row[34]))  
+			organisationsList.append((row[0],row[5],row[6],row[32],row[33],row[34],row[0]))  
 	print organisationsList[0]
 
 	# Select locations and match type/name with brin id. Write if success.
@@ -110,6 +111,7 @@ with open("onderwijsinstellingen_amsterdam.csv","w") as fout:
 				# append type code and type name
 				row.append(a[1])
 				row.append(a[2])
+				row.append(a[6])
 				# add missing tel
 				if len(row[32])<2:
 					row[32]=a[3]
