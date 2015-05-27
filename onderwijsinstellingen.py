@@ -29,7 +29,7 @@ import copy
 #s3 = boto.connect_s3(AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY)
 
 # running locally, use this one:
-s3 = S3Connection(aws_key, aws_secret)
+#s3 = S3Connection(aws_key, aws_secret)
 
 # ----------------------------------------------
 # Start Code
@@ -94,7 +94,7 @@ with open("onderwijsinstellingen_amsterdam.csv","w") as fout:
 	dataSet = csv.reader(listOrg, delimiter=",")
 	for row in dataSet: 
 		if row[1] == 'U' and row[23] == "363":
-			organisationsList.append((row[0],row[5],row[6]))
+			organisationsList.append((row[0],row[5],row[6],row[32],row[33],row[34]))  
 	print organisationsList[0]
 
 	# Select locations and match type/name with brin id. Write if success.
@@ -104,8 +104,27 @@ with open("onderwijsinstellingen_amsterdam.csv","w") as fout:
 	for row in t1:
 		for a in t2:
 			if row[0][:4] == a[0] and row[1] == 'D' and row[36] != 'H' and row[37] == 'N' and row[23] == "363":
+				# append type code and type name
 				row.append(a[1])
 				row.append(a[2])
+				# add missing tel
+				if len(row[32])<2:
+					row[32]=a[3]
+				# add missing email
+				if len(row[33])<2:
+					row[33]=a[4]
+				# add missing website
+				if len(row[34])<2:
+					row[34]=a[5]
+				# add website based on email address if present
+				if len(row[34])<2 and len(row[33])>2:
+					Exclusions = ["hotmail.com","gmail.com","outlook.com","xs4all.nl","planet.nl","zonnet.nl"]
+					eMailExtension = re.search(r'(@)(.*)',row[33]).group(2)
+					if eMailExtension not in Exclusions:
+						row[34]= "www.",eMailExtension
+					else:
+						row[34]=''
+
 				count = count + 1
 				print "%s" % (count)
 				#print row
