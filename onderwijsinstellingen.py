@@ -111,7 +111,7 @@ with open("onderwijsinstellingen_amsterdam.csv","w") as fout:
 				# append type code and type name
 				row.append(a[1])
 				row.append(a[2])
-				row.append(a[6])
+				row.append(row[0])
 				# add missing tel
 				if len(row[32])<2:
 					row[32]=a[3]
