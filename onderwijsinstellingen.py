@@ -137,7 +137,7 @@ with open("onderwijsinstellingen_amsterdam.csv","w") as fout:
 				# if row match and written stop for loop
 				break	
 	# dump csv as string
-	output = fout.getvalue()		
+	output = fout.getvalue().strip('\r\n')		
 	
 # Instantiate a new client for Amazon Simple Storage Service (S3)
 bucket_name = "opendata.lytrix.com" 
