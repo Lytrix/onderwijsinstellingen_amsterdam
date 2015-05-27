@@ -3,7 +3,6 @@ import os
 import boto
 from boto.s3.key import Key
 from boto.s3.connection import S3Connection
-import json
 from bs4 import BeautifulSoup
 import csv
 from csv import DictWriter
@@ -13,20 +12,20 @@ import zipfile
 from StringIO import StringIO 
 import re
 import copy
-
+import io
 # ------------------------------
 # SETUP Amazon S3 credentials
 # ------------------------------
 
 # only needed when running on Heroku
-#AWS_ACCESS_KEY_ID = os.environ['aws_access_key_id']
-#AWS_SECRET_ACCESS_KEY = os.environ['aws_secret_access_key']
+AWS_ACCESS_KEY_ID = os.environ['aws_access_key_id']
+AWS_SECRET_ACCESS_KEY = os.environ['aws_secret_access_key']
 
 # see all console steps
 #boto.set_stream_logger('boto')
 
 # only use when uploading to heroku
-#s3 = boto.connect_s3(AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY)
+s3 = boto.connect_s3(AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY)
 
 # running locally, use this one:
 #s3 = S3Connection(aws_key, aws_secret)
@@ -75,6 +74,10 @@ except:
 
 
 with open("onderwijsinstellingen_amsterdam.csv","w") as fout:
+	
+	# covert to bytes for string conversion later
+	fout = io.BytesIO()
+
 	# Set writer element
 	writer = csv.writer(fout, delimiter=';')            
 	
@@ -130,13 +133,13 @@ with open("onderwijsinstellingen_amsterdam.csv","w") as fout:
 				#print row
 				writer.writerow(row)
 				# if row match and written stop for loop
-				break			
-
+				break	
+	# dump csv as string
+	output = fout.getvalue()		
+	
 # Instantiate a new client for Amazon Simple Storage Service (S3)
 bucket_name = "opendata.lytrix.com" 
 bucket = s3.get_bucket(bucket_name, validate=False)
-#print "Creating new bucket with name: " + bucket_name
-#bucket = s3.create_bucket(bucket_name)
 
 # set empty filename
 k = Key(bucket)
@@ -144,10 +147,8 @@ k.key = 'onderwijsinstellingen_amsterdam.csv'
 
 #print "Uploading some data to " + bucket_name + " with key: " + k.key
 
-# dump json as string
-outfile=fout
 #add strings to file
-k.set_contents_from_string(outfile)
+k.set_contents_from_string(output)
 #set file to public
 k.set_canned_acl('public-read')
 # print link to file
