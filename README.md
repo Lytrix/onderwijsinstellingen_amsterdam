@@ -7,12 +7,9 @@ This python script retrieves the latest education locations from the Netherlands
 <br>
 <br>
 <b>usage:</b> <br>
-Deploy this repo to heroku by using this tutorial:<br>
-https://devcenter.heroku.com/articles/getting-started-with-python#introduction
-<br>
-or deploy locally by using: <br>
+Deploy locally by using: <br>
 pip install -r requirements.txt --allow-all-external
 <br> <br>
-This script uses an Amazon S3 storage solution to save the created csv file.
+This script saves the created csv file to the root folder.
 <br>
 
